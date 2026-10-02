@@ -52,7 +52,7 @@ This dataset describes observed trip behavior. It does not include rider demogra
 ## Project Deliverables
 - **SQL analysis:** [sql/divvy_anallysis.sql]
 - **RMarkdown:** [r/divvy-Case-Study.Rmd]
-- **Tableau dashboard:** [View the interactive Tableau Public dashboard] (paste URL)
+- **Tableau dashboard:** [View the interactive Tableau Public dashboard] (https://public.tableau.com/views/AllDivvyRows/DIVVYRiders?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 - **Dashboard screenshots:** [images]
 - **Data documentation:** [data/README.md]
 
