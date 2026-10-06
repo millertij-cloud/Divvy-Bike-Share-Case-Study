@@ -1,0 +1,147 @@
+===============================================================================
+	⁃	Divvy Bike-Share Rider Behavior Analysis
+	⁃	Tools: Google BigQuery / GoogleSQL
+	⁃	Author: Tijara Miller
+	⁃	Project: Independent Data Analytics Portfolio Project
+===============================================================================
+	⁃	BUSINESS QUESTION: 
+	⁃	How do casual riders and annual memebers differe in trip volume, trip duration, weekday usage, hourly usage, and top start stations?
+
+===============================================================================
+	⁃	1. DATA PREVIEW AND STRUCTURE CHECK
+===============================================================================
+SELECT * 
+FROM `divvycapstone.Divvy_Jan.clean`
+LIMIT 10;
+
+===============================================================================
+	⁃	2. DATA QUALITY VALIDATION
+===============================================================================
+SELECT
+COUNT(*) AS total_rows,
+COUNT(DISTINCT ride_id) AS distinct_ride_ids,
+COUNTIF(start_ts IS NULL) AS missing_start_time,
+COUNTIF(end_ts IS NULL) AS missing_end_time,
+COUNTIF(start_station_name IS NULL) AS missing_start_station
+FROM `divvycapstone.Divvy_Jan.clean`;
+
+===============================================================================
+	⁃	3. CREATE ANALYSIS READY TABLE
+===============================================================================
+CREATE OR REPLACE TABLE `divvycapstone.Divvy_Jan.clean` AS
+SELECT
+ride_id,
+member_casual,
+start_ts,
+end_ts,
+start_station_name,
+end_station_name,
+trip_druation_min,
+
+TIMESTAMP_DIFF(end_ts, start_ts, MINUTE) AS trip_duration_min,
+EXTRACT(DAYOFWEEK FROM start_ts) AS weekday_number,
+CASE EXTRACT(DAYOFWEEK FROM start_ts)
+WHEN 1 THEN 'Sunday'
+WHEN 2 THEN 'Monday'
+WHEN 3 THEN 'Tuesday'
+WHEN 4 THEN 'Wednesday'
+WHEN 5 THEN 'Thursday'
+WHEN 6 THEN 'Friday'
+WHEN 7 THEN 'Saturday'
+END AS weekday_name,
+EXTRACT(HOUR FROM start_ts) AS start_hour
+FROM `divvycapstone.Divvy_Jan.clean`
+WHERE ride_id IS NOT NULL
+AND member_casual IS NOT NULL
+AND start_ts IS NOT NULL
+AND end_ts IS NOT NULL;
+
+===============================================================================
+	⁃	4. DEFINE VALID-TRIP ANALYSIS POPULATION
+===============================================================================
+CREATE OR REPLACE TABLE `divvycapstone.Divvy_Jan.clean` AS
+SELECT *
+FROM `divvycapstone.Divvy_Jan.clean`
+WHERE trip_duration_min > 1
+AND trip_duration_min <= 240;
+
+===============================================================================
+	⁃	5. VALIDATION OF FINAL ANALYSIS POPULATION
+===============================================================================
+SELECT
+COUNT(*) AS valid_trip_count,
+COUNT(DISTINCT ride_id) AS distinct_valid_ride_ids,
+MIN(trip_duration_min) AS minimum_duration_minutes,
+MAX(trip_duration_min) AS maximum_duration_minutes,
+ROUND(AVG(trip_duration_min),2) AS average_duration_minutes,
+FROM `divvycapstone.Divvy_Jan.clean`;
+
+===============================================================================
+	⁃	6. MEMBER VS. CASUAL RIDER SUMMARY
+===============================================================================
+SELECT
+member_casual,
+COUNT(*) AS total_trips,
+ROUND(AVG(trip_duration_min),2) AS average_duration_minutes
+FROM `divvycapstone.Divvy_Jan.clean`
+GROUP BY member_casual
+ORDER BY total_trips DESC;
+
+===============================================================================
+	⁃	7. WEEKDAY PATTERN BY RIDER TYPE
+===============================================================================
+
+SELECT
+member_casual,
+weekday_number,
+weekday_name,
+COUNT(*) AS total_trips,
+ROUND(AVG(trip_duration_min), 2) AS average_duration_minutes
+FROM `divvycapstone.Divvy_Jan.clean`
+GROUP BY
+member_casual,
+weekday_number,
+weekday_name
+ORDER BY
+member_casual,
+weekday_number;
+
+===============================================================================
+	⁃	8. HOURLY PATTERN BY RIDER TYPE
+===============================================================================
+SELECT
+member_casual,
+start_hour,
+COUNT(*) AS total_trips,
+ROUND(AVG(trip_duration_min),2) AS average_duration_minutes
+FROM `divvycapstone.Divvy_Jan.clean`
+GROUP BY
+member_casual,
+start_hour
+ORDER BY
+member_casual,
+start_hour;
+
+===============================================================================
+	⁃	9. TOP START STATIONS BY RIDER TYPE
+===============================================================================
+
+SELECT
+member_casual,
+start_station_name,
+COUNT(*) AS total_trips,
+ROUND(AVG(trip_duration_min), 2) AS average_duration_minutes
+FROM `divvycapstone.Divvy_Jan.clean`
+WHERE start_station_name IS NOT NULL
+GROUP BY
+member_casual,
+start_station_name
+QUALIFY ROW_NUMBER () OVER (
+  PARTITION BY member_casual
+  ORDER BY COUNT(*) DESC
+) <= 20
+ORDER BY
+member_casual,
+total_trips DESC;
+
+
