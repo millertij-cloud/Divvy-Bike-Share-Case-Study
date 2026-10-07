@@ -14,11 +14,11 @@ How do casual riders and annual members differ in trip volume, trip duration, we
 
 ## Dataset
 - ** Source:** Divvy/Cyclistic historical trip data
-- ** Scope:** [months and year analyzed]
-- ** Full cleaned dataset:** Approximately [final number] trip-level records
-- ** Analysis population:** Approximately [final valid-trip count] valid trips after applying the documented duration rule
+- ** Scope:** January, February, and March of 2025.
+- ** Full cleaned dataset:** Approximately 466,000 trip-level records
+- ** Analysis population:** Approximately 453,018 valid trips after applying the documented duration rule
 
-  The raw source files are not included in this repository. The dataset is publicly available from [source link]. This repository includes the SQL, RMarkdown analysis, dashboard screenshots, and documentation needed to understand the workflow.
+  The raw source files are not included in this repository. The dataset is publicly available from https://divvy-tripdata.s3.amazonaws.com/index.html . This repository includes the SQL, RMarkdown analysis, dashboard screenshots, and documentation needed to understand the workflow.
 
 ## Data Preparation and Validation
 1. Combined and standardized monthly trip data in Google BigQuery.
@@ -37,14 +37,13 @@ The analysis compared casual riders and annual members by:
 - High-volume starting stations
 
 ## Key Findings
-1. First final, evidence-based finding
-2. second final, evidence-based finding
-3. third final, evidence-based finding
+1. Top start stations for members are Canal St. and the top start station for casual riders is the Navy Pier.   
+2. On average the trip duration for casual riders is a minute longer than members.
+3. For casual riders and members 4 pm and 5 pm on Tuesday and Wednesday have the most consistent trips. 
 
 ## Recommendations
-1. finding 1
-2. finding 2
-3. Optional finding 3
+1. To convert casual riders to members, its recommended that Divvy create marketing events at Navy Pier. 
+2. To convert casual riders to members, its recommended that Divvy market discounts for members on Tuesday and Wednesday all day each week. 
 
 ## Limitations
 This dataset describes observed trip behavior. It does not include rider demographics, marketing exposure, reasons for riding, or actual membership-conversion outcomes. The analysis identifies patterns and opportunities for further testing; it does not prove that a particular campaign caused membership conversion. 
@@ -53,8 +52,9 @@ This dataset describes observed trip behavior. It does not include rider demogra
 - **SQL analysis:** [sql/divvy_anallysis.sql]
 - **RMarkdown:** [r/divvy-Case-Study.Rmd]
 - **Tableau dashboard:** [View the interactive Tableau Public dashboard] (https://public.tableau.com/views/AllDivvyRows/DIVVYRiders?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
-- **Dashboard screenshots:** [images]
-- **Data documentation:** [data/README.md]
+- **Dashboard screenshots:** <img width="668" height="880" alt="Screenshot 2026-10-07 at 2 25 07 PM" src="https://github.com/user-attachments/assets/71dfd2dc-9dab-4e4d-a3da-f1fe31b098b9" />
+
+- **Data documentation:** https://github.com/millertij-cloud/Divvy-Bike-Share-Case-Study/edit/main/README.md
 
 ## Repository Structure
 
